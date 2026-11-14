@@ -86,7 +86,7 @@
                     <div class="icone-cartao">⬡</div>
                     <h3>Materiais</h3>
                     <p>Cadastre e consulte os materiais utilizados na empresa.</p>
-                    <a href="{% url 'admin:materiais_material_changelist' %}">
+                    <a href="{% url 'materiais' %}">
                         Gerenciar materiais <span>→</span>
                     </a>
                 </article>
@@ -95,7 +95,7 @@
                     <div class="icone-cartao">⇄</div>
                     <h3>Movimentações</h3>
                     <p>Registre entradas e saídas de materiais com segurança.</p>
-                    <a href="{% url 'admin:materiais_movimentacao_add' %}">
+                   <a href="{% url 'movimentacoes' %}">
                         Registrar movimentação <span>→</span>
                     </a>
                 </article>
@@ -104,7 +104,7 @@
                     <div class="icone-cartao">▤</div>
                     <h3>Consultar Estoque</h3>
                     <p>Confira os saldos disponíveis dos materiais cadastrados.</p>
-                    <a href="{% url 'admin:materiais_material_changelist' %}">
+                    <a href="{% url 'consulta_estoque' %}">
                         Consultar estoque <span>→</span>
                     </a>
                 </article>
@@ -126,7 +126,7 @@
                         <p>Nenhuma movimentação registrada.</p>
                     {% endfor %}
 
-                    <a href="{% url 'admin:materiais_movimentacao_changelist' %}">
+                    <a href="{% url 'movimentacoes' %}">
                         Ver histórico <span>→</span>
                     </a>
                 </article>
