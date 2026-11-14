@@ -1,0 +1,168 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materiais | JS Vilela</title>
+    <link rel="stylesheet" href="{% static 'materiais/css/estilo.css' %}">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="identidade">
+        <div class="logo">JS</div>
+        <div>
+            <h1>JS Vilela Linhas e Cordas</h1>
+            <p>Controle de Materiais</p>
+        </div>
+
+        <div class="acessibilidade">
+    <span>Acessibilidade:</span>
+    <button type="button" id="diminuir-fonte" aria-label="Diminuir tamanho da fonte">A−</button>
+    <button type="button" id="aumentar-fonte" aria-label="Aumentar tamanho da fonte">A+</button>
+</div>
+    </div>
+</header>
+
+<div class="estrutura">
+
+    <aside class="sidebar">
+        <p class="menu-titulo">GESTÃO DE MATERIAIS</p>
+
+        <nav>
+            <a href="{% url 'inicio' %}" class="menu-link">
+                <span>⌂</span> Início
+            </a>
+
+            <a href="{% url 'materiais' %}" class="menu-link ativo">
+                <span>⬡</span> Materiais
+            </a>
+
+           <a href="{% url 'movimentacoes' %}" class="menu-link">
+    <span>⇄</span> Movimentações
+          </a>
+
+          <a href="{% url 'consulta_estoque' %}" class="menu-link">
+            <span>▤</span> Consultar Estoque
+          </a>
+        </nav>
+    </aside>
+
+    <main class="conteudo">
+
+        <div class="breadcrumb">
+            Início <span>›</span> <strong>Materiais</strong>
+        </div>
+
+        <section class="boas-vindas">
+            <h2>Gestão de Materiais</h2>
+            <p>Cadastre, consulte e acompanhe os materiais utilizados pela empresa.</p>
+        </section>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mensagem {{ message.tags }}" role="status">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <section class="painel-formulario">
+            <h3>Cadastrar novo material</h3>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="campos-formulario">
+
+                    <div class="campo">
+                        <label for="nome">Nome do material *</label>
+                        <input
+                            type="text"
+                            id="nome"
+                            name="nome"
+                            maxlength="100"
+                            required
+                            placeholder="Ex.: Corda de nylon">
+                    </div>
+
+                    <div class="campo">
+                        <label for="unidade">Unidade de medida *</label>
+                        <select id="unidade" name="unidade" required>
+                            <option value="">Selecione</option>
+                            {% for codigo, descricao in unidades %}
+                                <option value="{{ codigo }}">{{ descricao }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="quantidade">Quantidade inicial *</label>
+                        <input
+                            type="number"
+                            id="quantidade"
+                            name="quantidade"
+                            min="0"
+                            step="0.01"
+                            required
+                            placeholder="Ex.: 50">
+                    </div>
+
+                    <div class="campo campo-completo">
+                        <label for="descricao">Descrição</label>
+                        <textarea
+                            id="descricao"
+                            name="descricao"
+                            rows="3"
+                            placeholder="Informações adicionais sobre o material"></textarea>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="botao-principal">
+                    Cadastrar material
+                </button>
+            </form>
+        </section>
+
+        <section class="painel-tabela">
+            <div class="titulo-acoes">
+                <h3>Materiais cadastrados</h3>
+                <span>{{ lista_materiais|length }} materiais</span>
+            </div>
+
+            <div class="tabela-responsiva">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Unidade</th>
+                            <th>Quantidade em estoque</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for material in lista_materiais %}
+                            <tr>
+                                <td>{{ material.nome }}</td>
+                                <td>{{ material.get_unidade_display }}</td>
+                                <td>{{ material.quantidade_estoque }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3">Nenhum material cadastrado.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script src="{% static 'materiais/acess.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimentações | JS Vilela</title>
+    <link rel="stylesheet" href="{% static 'materiais/css/estilo.css' %}">
+</head>
+<body>
+
+    <header class="topbar">
+        <div class="marca">JS Vilela</div>
+        <div>Controle de Materiais</div>
+
+        <div class="acessibilidade">
+    <span>Acessibilidade:</span>
+    <button type="button" id="diminuir-fonte" aria-label="Diminuir tamanho da fonte">A−</button>
+    <button type="button" id="aumentar-fonte" aria-label="Aumentar tamanho da fonte">A+</button>
+</div>
+    </header>
+
+    <div class="estrutura">
+
+    <aside class="sidebar">
+        <nav>
+            <a href="{% url 'inicio' %}" class="menu-link">
+            <span>⌂</span> Início
+        </a>
+
+        <a href="{% url 'materiais' %}" class="menu-link">
+            <span>⬡</span> Materiais
+        </a>
+
+        <a href="{% url 'movimentacoes' %}" class="menu-link ativo">
+            <span>⇄</span> Movimentações
+        </a>
+
+        <a class="menu-link" href="{% url 'consulta_estoque' %}">
+    Consultar Estoque
+</a>
+        </nav>
+    </aside>
+
+    <main class="conteudo">
+        <h1>Movimentações</h1>
+        <p>Registre entradas e saídas de materiais do estoque.</p>
+
+        {% if messages %}
+            {% for mensagem in messages %}
+                <div class="mensagem">
+                    {{ mensagem }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <section class="painel-formulario">
+            <h2>Registrar movimentação</h2>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="campos-formulario">
+
+                    <div class="campo">
+                        <label for="material">Material</label>
+                        <select id="material" name="material" required>
+                            <option value="">Selecione um material</option>
+                            {% for material in lista_materiais %}
+                                <option value="{{ material.id }}">
+                                    {{ material.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="tipo">Tipo de movimentação</label>
+                        <select id="tipo" name="tipo" required>
+                            <option value="">Selecione</option>
+                            {% for valor, nome in tipos %}
+                                <option value="{{ valor }}">{{ nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="quantidade">Quantidade</label>
+                        <input
+                            type="number"
+                            id="quantidade"
+                            name="quantidade"
+                            min="0.01"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+
+                    <div class="campo">
+                        <label for="setor">Setor</label>
+                        <input
+                            type="text"
+                            id="setor"
+                            name="setor"
+                            maxlength="100"
+                            required
+                        >
+                    </div>
+
+                    <div class="campo">
+                        <label for="finalidade">Finalidade</label>
+                        <input
+                            type="text"
+                            id="finalidade"
+                            name="finalidade"
+                            maxlength="200"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <button type="submit" class="botao-principal">
+                    Registrar movimentação
+                </button>
+            </form>
+        </section>
+
+        <section class="painel-tabela">
+            <h2>Histórico recente</h2>
+
+            <div class="tabela-responsiva">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Material</th>
+                            <th>Tipo</th>
+                            <th>Quantidade</th>
+                            <th>Setor</th>
+                            <th>Finalidade</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in historico %}
+                            <tr>
+                                <td>{{ item.data_hora|date:"d/m/Y H:i" }}</td>
+                                <td>{{ item.material.nome }}</td>
+                                <td>{{ item.get_tipo_display }}</td>
+                                <td>
+                                    {{ item.quantidade }}
+                                    {{ item.material.get_unidade_display }}
+                                </td>
+                                <td>{{ item.setor }}</td>
+                                <td>{{ item.finalidade }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6">
+                                    Nenhuma movimentação registrada.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+    </div>
+
+    <script src="{% static 'materiais/acess.js' %}"></script>
+</body>
+</html>
