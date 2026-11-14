@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar Estoque | JS Vilela</title>
+    <link rel="stylesheet" href="{% static 'materiais/css/estilo.css' %}">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="identidade">
+        <div class="logo">JS</div>
+        <div>
+            <h1>JS Vilela Linhas e Cordas</h1>
+            <p>Controle de Materiais</p>
+        </div>
+    </div>
+
+    <div class="acessibilidade">
+    <span>Acessibilidade:</span>
+    <button type="button" id="diminuir-fonte" aria-label="Diminuir tamanho da fonte">A−</button>
+    <button type="button" id="aumentar-fonte" aria-label="Aumentar tamanho da fonte">A+</button>
+</div>
+</header>
+
+<div class="estrutura">
+    <aside class="sidebar">
+        <h2>Menu</h2>
+        <nav>
+            <a class="menu-link" href="{% url 'inicio' %}">Início</a>
+            <a class="menu-link" href="{% url 'materiais' %}">Materiais</a>
+            <a class="menu-link" href="{% url 'movimentacoes' %}">Movimentações</a>
+            <a class="menu-link ativo" href="{% url 'consulta_estoque' %}">Consultar Estoque</a>
+        </nav>
+    </aside>
+
+    <main class="conteudo">
+        <h2>Consulta de Estoque</h2>
+        <p>Visualize os materiais e suas quantidades disponíveis.</p>
+
+        <section class="painel-tabela">
+            <h3>Materiais cadastrados ({{ total_materiais }})</h3>
+
+            <div class="tabela-responsiva">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Unidade</th>
+                            <th>Quantidade em estoque</th>
+                            <th>Descrição</th>
+                            <th>Situação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for material in lista_materiais %}
+                        <tr>
+                            <td>{{ material.nome }}</td>
+                            <td>{{ material.get_unidade_display }}</td>
+                            <td>{{ material.quantidade_estoque }}</td>
+                            <td>{{ material.descricao|default:"-" }}</td>
+                            <td>
+                                {% if material.quantidade_estoque > 0 %}
+                                    Disponível
+                                {% else %}
+                                    Sem estoque
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">Nenhum material cadastrado.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="{% static 'materiais/acess.js' %}"></script>
+</body>
+</html>
